@@ -1,0 +1,227 @@
+{
+  "name": "Analysis agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "57f06bc7-6a38-4e53-942d-ec6e296f474f",
+      "name": "When chat message received",
+      "webhookId": "e65ce994-c853-4da6-8c80-5f4d17b1131e"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e227c111-99cc-44a7-baec-22fa8bfe1529",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        160
+      ],
+      "id": "4571aa87-2eef-47bd-bca9-8976bb09cad0",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "f8837ef1-0512-4867-a2be-41238adf35bf",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "tfO3InwYSHFZdXNz",
+          "name": "Groq account 2"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        176
+      ],
+      "id": "fa4b409e-a994-47da-b9e0-23e26e9b2285",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "toolDescription": "You are an advanced AI Research Agent focused on deep analysis.\nUnderstand the user’s topic clearly before answering.\nBreak the topic into smaller logical subtopics.\nAnalyze each part step by step with clear reasoning.\nProvide detailed explanations, examples, and comparisons where useful.\nAvoid vague or generic answers—be precise and insightful.\nHighlight key concepts, patterns, and relationships.\nStructure responses with headings and organized points.\nSummarize findings into clear insights and takeaways.\nIf unclear, ask questions before proceeding.",
+        "text": "={{ $json.chatInput }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        576,
+        80
+      ],
+      "id": "39202b72-6090-4f97-a175-7a38b376a420",
+      "name": "research agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        528,
+        240
+      ],
+      "id": "dbcfa027-e104-4554-8d04-40b8bada9175",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "LfIImCYO8q9zceKK",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        736,
+        288
+      ],
+      "id": "ce96a212-9e39-46f0-ad4f-70b17d3b379d",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "wVgJogAPHXL7ZjAM",
+          "name": "SerpAPI account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "research agent": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "research agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "research agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "1ad34608-d994-461f-9306-461ebd4ffc3e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3c52c90f7a28a25ac059379bafb4196c3b440c832bcb365436081138bacddba4"
+  },
+  "id": "iPl8AJxEGEgkSIgO",
+  "tags": []
+}
